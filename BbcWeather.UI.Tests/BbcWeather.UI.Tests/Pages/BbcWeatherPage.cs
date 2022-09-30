@@ -15,9 +15,9 @@ namespace BbcWeather.UI.Tests.Pages
         }
 
         public ILocator SearchField => _page.Locator("id=ls-c-search__input-label");
-        
+
         public ILocator BournemouthLocationOption => _page.Locator("text=Bournemouth, Bournemouth").First;
-        
+
         public int TomorrowsHighTemperature =>
             GetTemperatureAsInteger(_page.Locator("#daylink-0 .wr-day-temperature__high-value").InnerTextAsync());
 
