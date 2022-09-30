@@ -1,0 +1,10 @@
+{
+	"firstName": "Valerie"
+	"secondName": "Beynon"
+	"skills":
+		["automation", "testing", "API testing"]
+	"technologies":
+		["C#", "Selenium", "Jenkins", "Playwright", "SpecFlow", "NUnit"]
+	"email": "valerie.c.beynon@gmail.com"
+	"lastUpdated": "2022-09-30T12:58:34+0000"
+}
