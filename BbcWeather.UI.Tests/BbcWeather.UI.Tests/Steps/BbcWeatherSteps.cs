@@ -1,7 +1,10 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using BbcWeather.UI.Tests.Pages;
-using Microsoft.Playwright;
 using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using TechTalk.SpecFlow;
 
 namespace BbcWeather.UI.Tests.Steps
@@ -10,31 +13,55 @@ namespace BbcWeather.UI.Tests.Steps
     public class BbcWeatherSteps
     {
         private readonly BbcWeatherPage _bbcWeatherPage;
+        private readonly IWebDriver _driver;
 
-        public BbcWeatherSteps(IPage page)
+        public BbcWeatherSteps(BbcWeatherPage bbcWeatherPage)
         {
-            _bbcWeatherPage = new BbcWeatherPage(page);
+            _bbcWeatherPage = bbcWeatherPage;
+            _driver = new ChromeDriver();
         }
 
-        [Given(@"I am on the BBC Weather page")]
-        public async void GivenIAmOnTheBbcWeatherPage()
+        [Given(@"I have openedd a new driver window")]
+        public void GivenIHaveOpeneddANewDriverWindow()
+        {
+            _driver.Manage().Cookies.DeleteAllCookies();
+
+            _driver.Manage()
+                .Timeouts()
+                .ImplicitWait = new TimeSpan(0, 0, 30);
+
+            _driver.Manage()
+                .Window.Maximize();        
+        }
+        
+        [When(@"I am on the BBC Weather page")]
+        public async Task GivenIAmOnTheBbcWeatherPage()
         {
             await _bbcWeatherPage.Navigate();
         }
 
         [When(@"I search for '(.*)'")]
-        public async Task WhenISearchFor(string location)
+        public void WhenISearchFor(string location)
         {
-            await _bbcWeatherPage.SearchField.TypeAsync(location);
-            await _bbcWeatherPage.BournemouthLocationOption.ClickAsync();
+            Thread.Sleep(1500);
+            _bbcWeatherPage.TypeInSearchField(location);
+            Thread.Sleep(1500);
+            _bbcWeatherPage.ClickBournemouthLocationOption();
         }
 
         [Then(@"tomorrow\'s high temperature is higher than tomorrow\'s low temperature")]
         public void ThenTomorrowsHighTemperatureIsHigherThanTomorrowsLowTemperature()
         {
-            Assert.IsNotNull(_bbcWeatherPage.TomorrowsHighTemperature);
-            Assert.IsNotNull(_bbcWeatherPage.TomorrowsLowTemperature);
-            Assert.Greater(_bbcWeatherPage.TomorrowsHighTemperature, _bbcWeatherPage.TomorrowsLowTemperature);
+            var isTodayHigherThanTomorrow = true;
+            try
+            {
+                isTodayHigherThanTomorrow = _bbcWeatherPage.IsTodayHigherThanTomorrow();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail();
+            }
+            Assert.True(isTodayHigherThanTomorrow);
         }
     }
 }

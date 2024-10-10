@@ -1,5 +1,8 @@
+using BoDi;
+using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using TechTalk.SpecFlow;
 
 namespace BbcWeather.UI.Tests.Hooks
@@ -7,20 +10,27 @@ namespace BbcWeather.UI.Tests.Hooks
     [Binding]
     public class Hooks
     {
-        private readonly ScenarioContext _scenarioContext;
+        private IWebDriver _driver;
+        private readonly IObjectContainer _objectContainer;
 
-        public Hooks(ScenarioContext scenarioContext)
+        public Hooks(IObjectContainer objectContainer)
         {
-            _scenarioContext = scenarioContext;
+            _objectContainer = objectContainer;
         }
 
         [BeforeScenario]
         public async Task BeforeScenario()
         {
-            var playwright = await Playwright.CreateAsync();
-            var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });
-            var page = await browser.NewPageAsync();
-            _scenarioContext.ScenarioContainer.RegisterInstanceAs(page);
+            // _driver = new ChromeDriver();
+            // _driver.Manage().Cookies.DeleteAllCookies();
+            // _objectContainer.RegisterInstanceAs(_driver);
+            //
+            // _driver.Manage()
+            //     .Timeouts()
+            //     .ImplicitWait = new TimeSpan(0, 0, 30);
+            //
+            // _driver.Manage()
+            //     .Window.Maximize();
         }
     }
 }
