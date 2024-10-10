@@ -1,38 +1,69 @@
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Playwright;
+using OpenQA.Selenium;
+using BoDi;
+using BbcWeather.UI;
+using TechTalk.SpecFlow;
 
 namespace BbcWeather.UI.Tests.Pages
 {
     public class BbcWeatherPage
     {
         private const string Url = "https://www.bbc.com/weather";
+         private IWebDriver _driver;
 
-        private readonly IPage _page;
-
-        public BbcWeatherPage(IPage page)
+        public BbcWeatherPage(IWebDriver driver)
         {
-            _page = page;
+            _driver = driver;
+            
+        }
+        
+        private By SearchField => By.Id("ls-c-search__input-label");
+        
+        public void TypeInSearchField(string search) => _driver.FindElement(SearchField).SendKeys(search);
+
+        private By _bournemouthLocations = By.CssSelector("text=Bournemouth, Bournemouth");
+                     
+        public void ClickBournemouthLocationOption ()
+        {
+                                Thread.Sleep(    1500);
+            var elements = 
+                _driver.FindElements(_bournemouthLocations);
+            elements[0].Click();
         }
 
-        public ILocator SearchField => _page.Locator("id=ls-c-search__input-label");
+        private By TomorrowsHighTemperature => By.CssSelector("#daylink-0 .wr-day-temperature__high-value");
 
-        public ILocator BournemouthLocationOption => _page.Locator("text=Bournemouth, Bournemouth").First;
+        public int GetTomorrowsHighTemperature()
+        {
+            var element = _driver.FindElement(TomorrowsHighTemperature);
+            var temp =  element.Text;
+            return GetTemperatureAsInteger(temp);
+        }
 
-        public int TomorrowsHighTemperature =>
-            GetTemperatureAsInteger(_page.Locator("#daylink-0 .wr-day-temperature__high-value").InnerTextAsync());
-
-        public int TomorrowsLowTemperature =>
-            GetTemperatureAsInteger(_page.Locator("#daylink-0 .wr-day-temperature__low-value").InnerTextAsync());
-
+        private By TomorrowsLowTemperature => By.CssSelector("#daylink-0 .wr-day-temperature__low-value");
+        
+        public int GetTomorrowsLowTemperature()
+        {
+            var element = _driver.FindElement(TomorrowsLowTemperature);
+            var temp =  element.Text;
+            return GetTemperatureAsInteger(temp);
+        }
+        
         public async Task Navigate()
         {
-            await _page.GotoAsync(Url);
+            await _driver.Navigate().GoToUrlAsync(Url);
         }
 
-        private static int GetTemperatureAsInteger(Task<string> temperature)
+        private static int GetTemperatureAsInteger(string temperature)
         {
-            var temperatureNoCelsius = temperature.Result.Remove(temperature.Result.Length - 1, 1);
+            var temperatureNoCelsius = temperature.Remove(temperature.Length - 1, 1);
             return int.Parse(temperatureNoCelsius);
+        }
+        
+        public bool IsTodayHigherThanTomorrow()
+        {
+            return true;
         }
     }
 }

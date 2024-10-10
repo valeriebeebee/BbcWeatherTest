@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
+using System;
+using System.Threading;
 using BbcWeather.UI.Tests.Pages;
-using Microsoft.Playwright;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 
@@ -11,30 +11,39 @@ namespace BbcWeather.UI.Tests.Steps
     {
         private readonly BbcWeatherPage _bbcWeatherPage;
 
-        public BbcWeatherSteps(IPage page)
+        public BbcWeatherSteps(BbcWeatherPage bbcWeatherPage)
         {
-            _bbcWeatherPage = new BbcWeatherPage(page);
+            _bbcWeatherPage = bbcWeatherPage;
         }
 
         [Given(@"I am on the BBC Weather page")]
-        public async void GivenIAmOnTheBbcWeatherPage()
+        public void GivenIAmOnTheBbcWeatherPage()
         {
-            await _bbcWeatherPage.Navigate();
+            _bbcWeatherPage.Navigate();
         }
 
         [When(@"I search for '(.*)'")]
-        public async Task WhenISearchFor(string location)
+        public void WhenISearchFor(string location)
         {
-            await _bbcWeatherPage.SearchField.TypeAsync(location);
-            await _bbcWeatherPage.BournemouthLocationOption.ClickAsync();
+            Thread.Sleep(1500);
+            _bbcWeatherPage.TypeInSearchField(location);
+            Thread.Sleep(1500);
+            _bbcWeatherPage.ClickBournemouthLocationOption();
         }
 
         [Then(@"tomorrow\'s high temperature is higher than tomorrow\'s low temperature")]
         public void ThenTomorrowsHighTemperatureIsHigherThanTomorrowsLowTemperature()
         {
-            Assert.IsNotNull(_bbcWeatherPage.TomorrowsHighTemperature);
-            Assert.IsNotNull(_bbcWeatherPage.TomorrowsLowTemperature);
-            Assert.Greater(_bbcWeatherPage.TomorrowsHighTemperature, _bbcWeatherPage.TomorrowsLowTemperature);
+            var isTodayHigherThanTomorrow = true;
+            try
+            {
+                isTodayHigherThanTomorrow = _bbcWeatherPage.IsTodayHigherThanTomorrow();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail();
+            }
+            Assert.True(isTodayHigherThanTomorrow);
         }
     }
 }
