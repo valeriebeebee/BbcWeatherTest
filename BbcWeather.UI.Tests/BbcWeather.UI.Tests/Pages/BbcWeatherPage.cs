@@ -18,9 +18,11 @@ namespace BbcWeather.UI.Tests.Pages
             
         }
         
-        private By SearchField => By.Id("ls-c-search__input-label");
         
-        public void TypeInSearchField(string search) => _driver.FindElement(SearchField).SendKeys(search);
+        public void TypeInSearchField(string search)
+        {
+            _driver.FindElement(By.XPath("//*[@id=\"APjFqb\"]")).SendKeys(search);
+        }
 
         private By _bournemouthLocations = By.CssSelector("text=Bournemouth, Bournemouth");
                      
@@ -57,7 +59,12 @@ namespace BbcWeather.UI.Tests.Pages
 
         private static int GetTemperatureAsInteger(string temperature)
         {
-            var temperatureNoCelsius = temperature.Remove(temperature.Length - 1, 1);
+            var condition = true;
+            var temperatureNoCelsius = "";
+            while (condition)
+            {
+                temperatureNoCelsius = temperature.Remove(temperature.Length - 1, 1);
+            }
             return int.Parse(temperatureNoCelsius);
         }
         

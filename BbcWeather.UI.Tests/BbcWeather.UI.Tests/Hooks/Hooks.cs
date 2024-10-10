@@ -21,16 +21,16 @@ namespace BbcWeather.UI.Tests.Hooks
         [BeforeScenario]
         public async Task BeforeScenario()
         {
-            _driver = new ChromeDriver();
-            _driver.Manage().Cookies.DeleteAllCookies();
-            _objectContainer.RegisterInstanceAs(_driver);
-
-            _driver.Manage()
-                .Timeouts()
-                .ImplicitWait = new TimeSpan(0, 0, 30);
-
-            _driver.Manage()
-                .Window.Maximize();
+            // _driver = new ChromeDriver();
+            // _driver.Manage().Cookies.DeleteAllCookies();
+            // _objectContainer.RegisterInstanceAs(_driver);
+            //
+            // _driver.Manage()
+            //     .Timeouts()
+            //     .ImplicitWait = new TimeSpan(0, 0, 30);
+            //
+            // _driver.Manage()
+            //     .Window.Maximize();
         }
     }
 }

@@ -1,7 +1,10 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using BbcWeather.UI.Tests.Pages;
 using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using TechTalk.SpecFlow;
 
 namespace BbcWeather.UI.Tests.Steps
@@ -10,16 +13,31 @@ namespace BbcWeather.UI.Tests.Steps
     public class BbcWeatherSteps
     {
         private readonly BbcWeatherPage _bbcWeatherPage;
+        private readonly IWebDriver _driver;
 
         public BbcWeatherSteps(BbcWeatherPage bbcWeatherPage)
         {
             _bbcWeatherPage = bbcWeatherPage;
+            _driver = new ChromeDriver();
         }
 
-        [Given(@"I am on the BBC Weather page")]
-        public void GivenIAmOnTheBbcWeatherPage()
+        [Given(@"I have openedd a new driver window")]
+        public void GivenIHaveOpeneddANewDriverWindow()
         {
-            _bbcWeatherPage.Navigate();
+            _driver.Manage().Cookies.DeleteAllCookies();
+
+            _driver.Manage()
+                .Timeouts()
+                .ImplicitWait = new TimeSpan(0, 0, 30);
+
+            _driver.Manage()
+                .Window.Maximize();        
+        }
+        
+        [When(@"I am on the BBC Weather page")]
+        public async Task GivenIAmOnTheBbcWeatherPage()
+        {
+            await _bbcWeatherPage.Navigate();
         }
 
         [When(@"I search for '(.*)'")]
