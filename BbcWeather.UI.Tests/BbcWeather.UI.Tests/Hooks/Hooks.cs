@@ -18,19 +18,15 @@ namespace BbcWeather.UI.Tests.Hooks
             _objectContainer = objectContainer;
         }
 
-        [BeforeScenario]
-        public async Task BeforeScenario()
-        {
-            // _driver = new ChromeDriver();
-            // _driver.Manage().Cookies.DeleteAllCookies();
-            // _objectContainer.RegisterInstanceAs(_driver);
-            //
-            // _driver.Manage()
-            //     .Timeouts()
-            //     .ImplicitWait = new TimeSpan(0, 0, 30);
-            //
-            // _driver.Manage()
-            //     .Window.Maximize();
-        }
+//         public async Task ids()
+//         {
+// //             driver.find_element(:xpath, "//input[@id='loginid']"
+// //             driver.find_element(:xpath, "//input[@name='q']"
+// //                 <input id="gbqfq" class="gbqfif" type="text" value="" autocomplete="off" name="q">
+// // //input[@id="amount" and @maxlength='50']
+// // //input[@id and @maxlength]
+// //
+// //                 driver.find_element(:id, 'amount') and driver.find_element(xpath: "//input[@maxlength='50']")
+//         }
     }
 }
